@@ -1,4 +1,3 @@
-%% Testing Controller to determine optimal actuator length
 clc
 clear
 close all
@@ -6,26 +5,26 @@ close all
 %% Intialization
 N = 6; % Number of Actuators
 
-%% Testing Environments
-% [x,y,z,phi,theta,psi,n] = testEnv_VertRange;
-% [x,y,z,phi,theta,psi,n] = testEnv_HorzRange;
-% [x,y,z,phi,theta,psi,n] = testEnv_XRot;
-% [x,y,z,phi,theta,psi,n] = testEnv_Video;
+%% Simulated Environments
+% [x,y,z,phi,theta,psi,n] = simEnv_SmoothData;
+% [x,y,z,phi,theta,psi,n] = simEnv_SinglePoint;
+% [x,y,z,phi,theta,psi,n] = simEnv_GoAero;
+% [x,y,z,phi,theta,psi,n] = simEnv_OpenMutt;
+% [x,y,z,phi,theta,psi,n] = simEnv_RobotX;
+% [x,y,z,phi,theta,psi,n] = simEnv_RobotX2;
 % [x,y,z,phi,theta,psi,n] = simEnv_SeaState;
-% [x,y,z,phi,theta,psi,n] = testEnv_SineWave;
+% [x,y,z,phi,theta,psi,n] = simEnv_Husky;
 [x,y,z,phi,theta,psi,n] = testEnv_6DOFInitialization;
 
-% currData = [x;y;z;phi;theta;psi]; % Collect current data
+currData = [x,y,z,phi,theta,psi]; % Collect current data
 
 %% Spline
 % [x_spline,y_spline,z_spline,theta_spline,phi_spline,psi_spline,n]=splineCalc(x,y,z,theta,phi,psi,n);
-% [x_spline,y_spline,z_spline,phi_spline,theta_spline,psi_spline] = reg2spline(x,y,z,phi,theta,psi);
 
 %% Inverse Kinematics
 % Calculate leg lengths and moving platform coordinates
-% [topCords,b,p,actLengths,t] = invKin(x_spline,y_spline,z_spline,theta_spline,phi_spline,psi_spline,n,N);
 [topCords,b,p,actLengths,t] = invKin(x,y,z,theta,phi,psi,n,N);
-
+% [topCords,b,p,actLengths,t] = invKin(x_spline,y_spline,z_spline,theta_spline,phi_spline,psi_spline,n,N);
 %% Path Correction
 [topCords,actLengths,violIndices,maxVel,diff_actLengths] = pathCorrection(topCords,actLengths,n);
 
@@ -39,19 +38,14 @@ max_diff_index = find(max_diff>2.6); % Find all pose jumps that are greater than
 % vIndexMax = find(all(actLengths>439));
 
 %% Translation from change of length to voltages
-[actVoltages,deltaLength] = length2Voltage(actLengths);
+% [actVoltages,deltaLength] = length2Voltage(actLengths);
 
 %% Plot system
 % plot3D(b,p,topCords,x,y,z,N,n) % Raw data
 % plot3D(b,p,topCords,x_spline,y_spline,z_spline,N,n) % Spline data
 
-%% Range Finding
-% When using this function "path correction" section needs to be commented out
-% currData = [x;y;z;phi;theta;psi]; % Collect current data
-% rangeFinding(actLengths,currData)
-
 %% Create path csv file
 % createCSV(actLengths,actVoltages)
 
 %% Total actuator travel distance
-% [totalActTravel,avgActChange] = actTravel(actLengths);
+[totalActTravel,avgActChange] = actTravel(actLengths);
