@@ -34,7 +34,7 @@ N = 6; % Number of Actuators
 
 %% Path correction validation
 max_diff = max(abs(diff(actLengths, 1, 2)));
-max_diff_index = find(max_diff>26); % Find all pose jumps that are greater than 26mm/s
+max_diff_index = find(max_diff>2.6); % Find all pose jumps that are greater than 26mm/s
 % vIndexMin = find(all(actLengths<297));
 % vIndexMax = find(all(actLengths>439));
 
@@ -51,4 +51,7 @@ max_diff_index = find(max_diff>26); % Find all pose jumps that are greater than 
 % rangeFinding(actLengths,currData)
 
 %% Create path csv file
-createCSV(actLengths,actVoltages)
+% createCSV(actLengths,actVoltages)
+
+%% Total actuator travel distance
+% [totalActTravel,avgActChange] = actTravel(actLengths);

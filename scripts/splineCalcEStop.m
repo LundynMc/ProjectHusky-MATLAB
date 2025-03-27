@@ -2,22 +2,15 @@ function [topCords,actLengths,n,diff_actLengths]=splineCalcEStop(topCords,actLen
 % Interpolation between poses to generate a smoother platform movement
 
 % Initialize differencing arrays
-% diff_actLengths = zeros(6,size(actLengths,2));
-% for i = 2:size(diff_actLengths,2)
-%     for j = 1:6
-%         diff_actLengths(j,i) = actLengths(j,i)-actLengths(j,i-1); % Calculate difference between array elements
-%     end
-% end
 diff_actLengths = diff(actLengths,1,2);
-
+diff_actLengths = cat(2,zeros(6,1),diff_actLengths);
 interpFactor = 4; % Number of poses between old and new poses
 interpArray_actLengths = zeros(6,2); % Initialize embedded array
 interpArray_topCords = zeros(7,3,interpFactor);
 maxDiff = max(abs(diff_actLengths)); % Find maximum difference in diff array
-maxMaxDiff = max(maxDiff);
 
-actSpacing = 26; % Maximum actuator travel per 0.1 seconds
-if maxMaxDiff > actSpacing
+actSpacing = 2.6; % Maximum actuator travel per 0.1 seconds
+if max(maxDiff) > actSpacing
     for i = 1:size(diff_actLengths,2)
         if maxDiff(i) > actSpacing
             A_actLengths = [actLengths(:,i-1) actLengths(:,i)]; % Index values that are greater than max distance

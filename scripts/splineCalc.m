@@ -3,7 +3,8 @@ function [x_spline,y_spline,z_spline,theta_spline,phi_spline,psi_spline,n]=splin
 if n > 1 % If the path has more than 1 pose create spline
     
     t = linspace(0,1,n);
-    interpFactor = 5; % Scale factor on how much interpolation between poses
+    interpFactor = 35; % Scale factor on how much interpolation between poses
+    % Use scale factor of 35 for Husky IMU path
     t_interp = linspace(0,1,interpFactor*n); 
     x_spline = spline(t,x,t_interp);
     y_spline = spline(t,y,t_interp);

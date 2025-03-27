@@ -6,17 +6,26 @@ violIndices = [violIndexMin,violIndexMax];
 
 % Initialize home position
 topCordsHome = [...
-                113.6658,-21.8750,293;
-                37.8886,109.3750,293;
-                -37.8886,109.3750,293;
-                -113.6658,-21.8750,293;
-                -75.7772,-87.5000,293;
-                75.7772,-87.5000,293;
-                113.6658,-21.8750,293];
+    113.6658,-21.8750,293;
+    37.8886,109.3750,293;
+    -37.8886,109.3750,293;
+    -113.6658,-21.8750,293;
+    -75.7772,-87.5000,293;
+    75.7772,-87.5000,293;
+    113.6658,-21.8750,293];
 actLengthsHome =  [327.1327;327.1327;327.1327;...
-                327.1327;327.1327;327.1327];
+    327.1327;327.1327;327.1327];
 
-%% Condition 1: Path starts in a OoB (Out of Bounds) position
+%% Conditions 1, 3, and 4
+%{
+Condition 1: Path starts in a OoB (Out of Bounds) position
+
+Condition 3: Path goes from a safe position to an OoB position and later
+returns to a safe position
+
+Condition 4: Path goes from a safe position to an OoB position and does
+not return to a safe position
+%}
 if ~(isempty(violIndices))
     for i = 1:length(violIndices)
         if violIndices(i) ~= 1
@@ -29,7 +38,7 @@ if ~(isempty(violIndices))
     end
 end
 
-%% Condition 2: Path does not start and end in home position 
+%% Condition 2: Path does not start and end in home position
 % Start position
 if any(all(topCords(:,:,1) ~= topCordsHome(:,:))) && all(actLengths(:,1) ~= actLengthsHome(:,1))
     topCords = cat(3,topCordsHome,topCords);
@@ -40,51 +49,19 @@ end
 %     topCords = cat(3,topCordsHome,topCords);
 %     actLengths = cat(2,actLengthsHome,actLengths);
 % end
-%% Conditions 3 and 4:
-%{
-
-THIS SECTION IS OVERCOMPLICATED. JUST MAKE IT A DIFFERENCING ROUTINE TO
-ENSURE THAT IT DOES NOT GO PAST A CERTAIN DISTANCE IN A SET TIME
-
-%}
-% 3: Path goes from a safe position to an OoB position and later returns to a safe position
-% 4: Path goes from a safe position to an OoB position and does not return to a safe position
-
+%% Conditions 5: The distance between poses is greater than maximum allowable pose change
 % Determine plate accelerations > 1.1"/s or 27.94mm/s
-actLengthChange = zeros(6,length(actLengths));
-actVel = zeros(6,length(actLengths));
 timeStep = 1;
 
 % determine actuator velocity between poses
-for i = 2:size(actLengths,2)
-    for j = 1:6
-        actLengthChange(j,i) = abs(actLengths(j,i)-actLengths(j,i-1));
-        actVel(j,i) = actLengthChange(j,i)/timeStep;
-    end
-end
-
+actLengthChange = diff(actLengths,1,2);
+actVel = actLengthChange/timeStep;
 maxVel = max(actVel); % index all max velocities of actuators
+
 % interpolate between poses if max velocity is greater than 26mm/s
-actSpacing = 26; % Maximum actuator travel per 0.1 seconds
+actSpacing = 2.6; % Maximum actuator mm travel per time interval
 
-for i = 1:length(actLengthChange)
-    if maxVel(i) > actSpacing
-        [topCords,actLengths,n,diff_actLengths]=splineCalcEStop(topCords,actLengths,n);
-    else
-        diff_actLengths = 0;
-    end
-end
-% Run while loop to ensure that new poses did not create velocity spikes
-maxMaxVel = max(maxVel);
-while maxMaxVel > actSpacing
-    for i = 2:length(actLengths)
-        for j = 1:6
-            actLengthChange(j,i) = abs(actLengths(j,i)-actLengths(j,i-1));
-            actVel(j,i) = actLengthChange(j,i)/timeStep;
-        end
-    end
-
-    maxVel = max(actVel);
+if max(maxVel) > actSpacing
     for i = 1:length(actLengthChange)
         if maxVel(i) > actSpacing
             [topCords,actLengths,n,diff_actLengths]=splineCalcEStop(topCords,actLengths,n);
@@ -92,4 +69,22 @@ while maxMaxVel > actSpacing
             diff_actLengths = 0;
         end
     end
+
+    % Run while loop to ensure that new poses did not create velocity spikes
+    while max(maxVel) > actSpacing
+        % determine actuator velocity between poses
+        actLengthChange = diff(actLengths,1,2);
+        actVel = actLengthChange/timeStep;
+
+        maxVel = max(actVel);
+        for i = 1:length(actLengthChange)
+            if maxVel(i) > actSpacing
+                [topCords,actLengths,n,diff_actLengths]=splineCalcEStop(topCords,actLengths,n);
+            else
+                diff_actLengths = 0;
+            end
+        end
+    end
+else
+    diff_actLengths = 0;
 end
