@@ -5,7 +5,7 @@ function [actLengths,topCords] = pathSimplification(actLengths,topCords)
 % across full path and skip insignificant poses that remain in the same
 % position
 
-diff_actLengths = max(abs(diff(actLengths,1,2)),[],1) < 0.5;
+diff_actLengths = max(abs(diff(actLengths,1,2)),[],1) < 0.4;
 
 diff2 = diff([0,diff_actLengths,0]);
 startOnes = find(diff2 == 1);
@@ -15,7 +15,7 @@ mask = ~diff_actLengths;
 
 % Loop through each sequence of ones
 for i = 1:length(startOnes)
-    if endOnes(i) - startOnes(i) + 1 >= 5
+    if (endOnes(i) - startOnes(i) + 1 >= 5) 
         mask(startOnes(i):endOnes(i)) = true; % Keep if at least 5 ones
     end
 end

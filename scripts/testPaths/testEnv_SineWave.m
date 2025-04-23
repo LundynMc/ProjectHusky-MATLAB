@@ -1,6 +1,6 @@
 function [x, y, z, phi, theta, psi, n] = testEnv_SineWave
     % Number of points
-    n = 100;  
+    n = 3000;  
     t = linspace(0, 20, n);
 
     % Mid-range wave parameters
@@ -13,7 +13,7 @@ function [x, y, z, phi, theta, psi, n] = testEnv_SineWave
               A2 * rad2deg(sin(2 * pi * f2 * t + phase2)));  
           
     z = 50 * (A1 * sin(2 * pi * f1 * t + phase1) + ...
-              A2 * sin(2 * pi * f2 * t + phase2)) + 368;  
+              A2 * sin(2 * pi * f2 * t + phase2)) + 300;  
     
     % Rotation components (Phi, Theta, Psi)
     phi = 1 * rad2deg(A1 * sin(2 * pi * f1 * t + phase1) + ...

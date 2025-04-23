@@ -3,7 +3,7 @@ function [actVoltages,deltaLength] = length2Voltage(actLengths)
 % y=mx
 % ASSUMPTION: Linear speed scale 
 deltaLength = abs(diff(actLengths, 1, 2));
-maxSpeed = 27.94; % mm/s
+maxSpeed = 27.94/10; % mm/s
 voltRange = 1; % 12 Volt system, but data needs to be formatted from 0-1
 
 slope = maxSpeed/voltRange;
@@ -11,8 +11,10 @@ actVoltages = deltaLength/slope;
 
 for i = 1:length(actVoltages)
     for j = 1:6
-        if actVoltages(j,i) < 0.05
+        if actVoltages(j,i) < 0.1
             actVoltages(j,i) = 0;
+        elseif actVoltages(j,i) > 1
+            actVoltages(j,i) = 0.99;
         else
             actVoltages(j,i) = round(actVoltages(j,i),2);
         end

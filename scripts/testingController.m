@@ -12,8 +12,8 @@ N = 6; % Number of Actuators
 % [x,y,z,phi,theta,psi,n] = testEnv_XRot;
 % [x,y,z,phi,theta,psi,n] = testEnv_Video;
 % [x,y,z,phi,theta,psi,n] = simEnv_SeaState;
-% [x,y,z,phi,theta,psi,n] = testEnv_SineWave;
-[x,y,z,phi,theta,psi,n] = testEnv_6DOFInitialization;
+[x,y,z,phi,theta,psi,n] = testEnv_SineWave;
+% [x,y,z,phi,theta,psi,n] = testEnv_6DOFInitialization;
 
 % currData = [x;y;z;phi;theta;psi]; % Collect current data
 
@@ -42,7 +42,7 @@ max_diff_index = find(max_diff>2.6); % Find all pose jumps that are greater than
 [actVoltages,deltaLength] = length2Voltage(actLengths);
 
 %% Plot system
-% plot3D(b,p,topCords,x,y,z,N,n) % Raw data
+plot3D(b,p,topCords,x,y,z,N,n) % Raw data
 % plot3D(b,p,topCords,x_spline,y_spline,z_spline,N,n) % Spline data
 
 %% Range Finding
@@ -51,7 +51,7 @@ max_diff_index = find(max_diff>2.6); % Find all pose jumps that are greater than
 % rangeFinding(actLengths,currData)
 
 %% Create path csv file
-% createCSV(actLengths,actVoltages)
+createCSV(actLengths,actVoltages)
 
 %% Total actuator travel distance
 % [totalActTravel,avgActChange] = actTravel(actLengths);

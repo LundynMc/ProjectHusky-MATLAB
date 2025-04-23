@@ -6,15 +6,16 @@ violIndices = [violIndexMin,violIndexMax];
 
 % Initialize home position
 topCordsHome = [...
-    113.6658,-21.8750,293;
-    37.8886,109.3750,293;
-    -37.8886,109.3750,293;
-    -113.6658,-21.8750,293;
-    -75.7772,-87.5000,293;
-    75.7772,-87.5000,293;
-    113.6658,-21.8750,293];
-actLengthsHome =  [327.1327;327.1327;327.1327;...
-    327.1327;327.1327;327.1327];
+    37.8886,109.3750,253.7500;
+    113.6658,-21.8750,253.7500;
+    75.7772,-87.5000,253.7500;
+    -75.7772,-87.5000,253.7500;
+    -113.6658,-21.8750,253.7500;
+    -37.8886,109.3750,253.7500;
+    37.8886,109.3750,253.7500;
+    ];
+actLengthsHome =  [292.4993;292.4993;292.4993;...
+    292.4993;292.4993;292.4993];
 
 %% Conditions 1, 3, and 4
 %{
@@ -63,7 +64,7 @@ actSpacing = 2.6; % Maximum actuator mm travel per time interval
 
 if max(maxVel) > actSpacing
     for i = 1:length(actLengthChange)
-        if maxVel(i) > actSpacing
+        if actVel(i) > actSpacing
             [topCords,actLengths,n,diff_actLengths]=splineCalcEStop(topCords,actLengths,n);
         else
             diff_actLengths = 0;

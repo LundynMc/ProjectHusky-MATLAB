@@ -1,4 +1,10 @@
 function [x,y,z,phi,theta,psi,n] = simEnv_RobotX2
+
+
+% CHATGPT CODE DON'T USE
+
+
+
 %Specify the path to ROS bag file
 % bag = rosbag('2023-10-13-16-36-47_IMU.bag');
 bag = rosbag('2024-10-26-14-49-41_IMU.bag');

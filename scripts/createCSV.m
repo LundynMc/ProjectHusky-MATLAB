@@ -1,4 +1,5 @@
 function createCSV(actLengths, actVoltages)
+
 diff_actLengths = diff(actLengths,1,2);
 for i = 1:size(actVoltages,1)
     for j = 1:size(actVoltages,2)
@@ -14,4 +15,4 @@ actVoltages = actVoltages';
 
 pathData = [actLengths(1:end-1,:),actVoltages];
 
-writematrix(pathData,"test1.csv")
+% writematrix(pathData,"UpDown.csv")

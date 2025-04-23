@@ -14,9 +14,12 @@ N = 6; % Number of Actuators
 % [x,y,z,phi,theta,psi,n] = simEnv_RobotX2;
 % [x,y,z,phi,theta,psi,n] = simEnv_SeaState;
 % [x,y,z,phi,theta,psi,n] = simEnv_Husky;
-[x,y,z,phi,theta,psi,n] = testEnv_6DOFInitialization;
+% [x,y,z,phi,theta,psi,n] = testEnv_6DOFInitialization;
+% [x,y,z,phi,theta,psi,n] = testEnv_SineWave;
+[x,y,z,phi,theta,psi,n] = testEnv_UpDown;
+% [x,y,z,phi,theta,psi,n] = testEnv_Rotate;
 
-currData = [x,y,z,phi,theta,psi]; % Collect current data
+currData = [x;y;z;phi;theta;psi]; % Collect current data
 
 %% Spline
 % [x_spline,y_spline,z_spline,theta_spline,phi_spline,psi_spline,n]=splineCalc(x,y,z,theta,phi,psi,n);
@@ -34,18 +37,19 @@ currData = [x,y,z,phi,theta,psi]; % Collect current data
 %% Path correction validation
 max_diff = max(abs(diff(actLengths, 1, 2)));
 max_diff_index = find(max_diff>2.6); % Find all pose jumps that are greater than 26mm/s
-% vIndexMin = find(all(actLengths<297));
-% vIndexMax = find(all(actLengths>439));
 
 %% Translation from change of length to voltages
-% [actVoltages,deltaLength] = length2Voltage(actLengths);
+[actVoltages,deltaLength] = length2Voltage(actLengths);
 
 %% Plot system
 % plot3D(b,p,topCords,x,y,z,N,n) % Raw data
+% plot3D2(b,p,topCords,x,y,z,N,n) % Raw data
 % plot3D(b,p,topCords,x_spline,y_spline,z_spline,N,n) % Spline data
 
+plotActLengths(actLengths)
+
 %% Create path csv file
-% createCSV(actLengths,actVoltages)
+createCSV(actLengths,actVoltages)
 
 %% Total actuator travel distance
 [totalActTravel,avgActChange] = actTravel(actLengths);

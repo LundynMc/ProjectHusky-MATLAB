@@ -46,4 +46,12 @@ phi = EulAngles(:,3);
 % psi = psi(500:1500);
 % theta = theta(500:1500);
 % phi = phi(500:1500);
+
+% Flipping matricies
+x = x';
+y = y';
+z = z';
+phi = phi';
+theta = theta';
+psi = psi';
 n = length(x);

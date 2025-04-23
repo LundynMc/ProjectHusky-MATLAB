@@ -9,6 +9,8 @@ interpArray_actLengths = zeros(6,2); % Initialize embedded array
 interpArray_topCords = zeros(7,3,interpFactor);
 maxDiff = max(abs(diff_actLengths)); % Find maximum difference in diff array
 
+% numDiff = sum(maxDiff>2.6);
+
 actSpacing = 2.6; % Maximum actuator travel per 0.1 seconds
 if max(maxDiff) > actSpacing
     for i = 1:size(diff_actLengths,2)

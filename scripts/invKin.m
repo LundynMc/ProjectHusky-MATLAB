@@ -11,10 +11,10 @@ actLengths = zeros(6,n); % Actuator leg lengths
 %% Define coordinates for static plate
 % Hexagon mounting positions
 rad = 515/2; % radius
-iterAngle = 0;
+iterAngle = 60;
 for i = 1:N
     b(i,:) = [rad*cosd(iterAngle),rad*sind(iterAngle),0];
-    iterAngle=iterAngle+60;
+    iterAngle=iterAngle-60;
 end
 
 %% Define coordinates for dynamic plate
@@ -22,13 +22,33 @@ end
 edgeLength = 175; % Length from origin to edge intersection
 mountLength = edgeLength*.375; % Length from edge intersection to actuator connection parallel line
 edgeMountAngle = 30; % Angle associated with point identification
+%{
+1. (-,+)
+2. (-,-)
+3. (-,-)
+4. (+,-)
+5. (+,-)
+6. (+,+)
+1 - 5
+2 - 6
+3 - 1
+4 - 2
+5 - 3
+6 - 4
+%}
+p(1,:) = [mountLength*tand(edgeMountAngle),edgeLength-mountLength,0];
+p(2,:) = [edgeLength*cosd(edgeMountAngle)-mountLength*tand(edgeMountAngle),-(edgeLength*sind(edgeMountAngle)-mountLength),0];
+p(3,:) = [edgeLength*cosd(edgeMountAngle)-mountLength/cosd(edgeMountAngle),-edgeLength*sind(edgeMountAngle),0];
+p(4,:) = [-(edgeLength*cosd(edgeMountAngle)-mountLength/cosd(edgeMountAngle)),-edgeLength*sind(edgeMountAngle),0];
+p(5,:) = [-(edgeLength*cosd(edgeMountAngle)-mountLength*tand(edgeMountAngle)),-(edgeLength*sind(edgeMountAngle)-mountLength),0];
+p(6,:) = [-mountLength*tand(edgeMountAngle),edgeLength-mountLength,0];
 
-p(1,:) = [edgeLength*cosd(edgeMountAngle)-mountLength*tand(edgeMountAngle),-(edgeLength*sind(edgeMountAngle)-mountLength),0];
-p(2,:) = [mountLength*tand(edgeMountAngle),edgeLength-mountLength,0];
-p(3,:) = [-mountLength*tand(edgeMountAngle),edgeLength-mountLength,0];
-p(4,:) = [-(edgeLength*cosd(edgeMountAngle)-mountLength*tand(edgeMountAngle)),-(edgeLength*sind(edgeMountAngle)-mountLength),0];
-p(5,:) = [-(edgeLength*cosd(edgeMountAngle)-mountLength/cosd(edgeMountAngle)),-edgeLength*sind(edgeMountAngle),0];
-p(6,:) = [edgeLength*cosd(edgeMountAngle)-mountLength/cosd(edgeMountAngle),-edgeLength*sind(edgeMountAngle),0];
+% p(1,:) = [edgeLength*cosd(edgeMountAngle)-mountLength*tand(edgeMountAngle),-(edgeLength*sind(edgeMountAngle)-mountLength),0];
+% p(2,:) = [mountLength*tand(edgeMountAngle),edgeLength-mountLength,0];
+% p(3,:) = [-mountLength*tand(edgeMountAngle),edgeLength-mountLength,0];
+% p(4,:) = [-(edgeLength*cosd(edgeMountAngle)-mountLength*tand(edgeMountAngle)),-(edgeLength*sind(edgeMountAngle)-mountLength),0];
+% p(5,:) = [-(edgeLength*cosd(edgeMountAngle)-mountLength/cosd(edgeMountAngle)),-edgeLength*sind(edgeMountAngle),0];
+% p(6,:) = [edgeLength*cosd(edgeMountAngle)-mountLength/cosd(edgeMountAngle),-edgeLength*sind(edgeMountAngle),0];
 %% Define rotational matrix
 for i = 1:n
     % Row 1
